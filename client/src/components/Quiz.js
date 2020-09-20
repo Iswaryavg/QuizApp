@@ -7,13 +7,77 @@ import {useState,useEffect} from "react"
 
 function Quiz() {
        
- 
+    const [validation,setvalidation]=useState({value: "",timeOut: false,round: 0,timer: 10, randomTense: "",wrongAnswer: "",wrongAnswers: []})    
 
+       
+    useEffect(() => {
+        function startTimeOut()  {
+             setTimeout(() => {
+                setvalidation(prevvalue => {               
+                    return ({...prevvalue,timeOut:true});
+      
+                  });  
+            }, 10000)
+        
+           const interval=  setInterval(() => {
+                setvalidation(prevvalue => {   
+                   let timer  =prevvalue.timer-1      
+                   if (timer === 0) {
+                    clearInterval(interval)
+                }    
+                    return ({...prevvalue,timer:timer});
+       
+                  });  
+                 
+            }, 1000)
+
+        }
+        function randomTense() {
+            let TenseArray = ['simple', 'past']
+            //We need to get one tense between simple and past randomly 
+            let res =  TenseArray[Math.floor(Math.random() * TenseArray.length)]
+
+         
+            setvalidation(prevvalue => {               
+                return ({...prevvalue,randomTense:res});
+   
+              });         
+      
+        }    
+        randomTense()
+        startTimeOut()
+       
+      },[]);
+console.log(validation)
+
+//     function handleRestart()  {
+//         //1. set state  timer : 0
+//         setvalidation({...validation, timer: 10, timeOut: false, wrongAnswer: "" })
+// console.log(validation.wrongAnswer)
+//         //2. trigger startTimeOut again 
+//         // startTimeOut();
+//     }
+   function handleRedirect()  {
+   
+        setTimeout(() => {
+            window.location.reload();
+        }, 10);
+
+    }
+    function    handleRestart()  {
+        //1. set state  timer : 0
+        this.setState({ timer: 10, timeOut: false, wrongAnswer: "" })
+
+        //2. trigger startTimeOut again 
+        this.startTimeOut();
+    }
     return (
         <div  style={{ padding: '1rem', border: '1px solid grey', borderRadius: '4px', maxWidth: 400, margin: '3rem auto' }}>
           <h1>Quiz to test your Grammar </h1>
-          <h2></h2>
-          <Progress percent={30} status="active"/>
+       
+          {/* <Button type="submit" onClick={handleRestart}>Click   </Button>                          */}
+                                                                                                  
+                        <Progress percent={30} status="active"/>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <h2>LEVEL 1</h2>
                             <h2>Quiz</h2>
@@ -43,16 +107,17 @@ function Quiz() {
                             </div>
                         </form>
           {/* Timer */}
+          
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <Button>5</Button>
                             <Button>4</Button>
                             <Button>3</Button>
                             <Button>2</Button>
                             <Button>1</Button>
-                            <Button
-                                                           >
-                                Click to Restart!
-                            </Button>
+                            <Button onClick={handleRedirect}>
+                                
+              
+                                Click to Restart!</Button>
                         </div>
 {/* 
 Results */}
